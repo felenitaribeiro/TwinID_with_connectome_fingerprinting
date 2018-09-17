@@ -4,7 +4,6 @@ Code for individual identification based on functional connectivity
 """
 import numpy as np
 from scipy.stats import pearsonr
-import os
 import matplotlib.pyplot as plt
 import xlrd
 
