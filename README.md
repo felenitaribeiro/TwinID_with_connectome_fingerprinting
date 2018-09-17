@@ -22,7 +22,7 @@ Script to classify nodes based on their attribution to specific functional netwo
 Here it defined some functions that will be used in the following codes.
 
 #### Twin_IDs
-Little code to transfor a list of twin identities on excel into a list on Python. Note that, each line correspond to a pair of identities (paired twins). For our study, in this list, we sorted (first column) the monozygotic twins identities from the smallest to the largest ID number (corresponding to the identities from 1 to 246) and, in the following, we sorted in the same way the dizygotic twin identitis (corresponding to the identities from 247 to 380).
+Little code to transform a list of twin identities on excel into a list on Python. Note that, each line correspond to a pair of identities (paired twins). For our study, in this list, we sorted (first column) the monozygotic twins identities from the smallest to the largest ID number (corresponding to the identities from 1 to 246) and, in the following, we sorted in the same way the dizygotic twin identitis (corresponding to the identities from 247 to 380).
 
 ### Analyses' codes:
 #### Fingerprint_ind_identification
