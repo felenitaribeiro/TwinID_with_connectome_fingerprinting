@@ -24,7 +24,7 @@ Here it defined some functions that will be used in the following codes.
 #### Twin_IDs
 Little code to transfor a list of twin identities on excel into a list on Python. Note that, each line correspond to a pair of identities (paired twins). For our study, in this list, we sorted (first column) the monozygotic twins identities from the smallest to the largest ID number (corresponding to the identities from 1 to 246) and, in the following, we sorted in the same way the dizygotic twin identitis (corresponding to the identities from 247 to 380).
 
-### Analyses codes:
+### Analyses' codes:
 #### Fingerprint_ind_identification
 Code for individual identification based on functional connectivity profiles previously described (Finn et al., 2015). Identification analyses are performed considering the whole-brain as well as each functional network a priori defined. For individual predictions, mean identification accuracy is reported from the comparison across databases (REST1xREST2 and REST2xREST1). Also, correlation score were grouped based the relationship between pair of individuals for further analyses.
 
