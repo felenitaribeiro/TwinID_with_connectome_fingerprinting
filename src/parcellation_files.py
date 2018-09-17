@@ -22,11 +22,14 @@ for i in range(0,246):
     mat_name_lines=mat["names"]
     mat_name_colunm=mat["names2"]
 
+    # Slicing matrix according to the parcellation scheme
+    finn_slice = slice(133, 401)
+    gordon_slice = slice(401, 734)
+    networks_slice = slice(734, 766)
 
-    #Separando as matrizes de conectividade usando diferentes metodos de parcelamento
-    mat_conn_finn=mat_conn[133:401,133:401]
-    mat_conn_gordon=mat_conn[401:734,401:734]
-    mat_conn_networks=mat_conn[734:766,734:766]
+    mat_conn_finn = mat_conn[finn_slice, finn_slice]
+    mat_conn_gordon = mat_conn[gordon_slice, gordon_slice]
+    mat_conn_networks = mat_conn[networks_slice, networks_slice]
 
     #Preencher a diagonal das matrizes de conectividade por valor 1 (correlacao de uma ROI com elas mesma)
     np.fill_diagonal(mat_conn_finn,1)
