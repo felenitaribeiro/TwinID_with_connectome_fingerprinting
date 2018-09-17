@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+"""
+Script to transform CONN outputs to CSV files according the parcellation scheme.
+"""
 import scipy.io
-import csv
 import numpy as np
 import os
 
