@@ -1,7 +1,7 @@
 # Connectome fingerprint analyses
 
 In here, I uploaded the main scripts for individual identification based on functional connectivity profiles that we wrote on Python.
-All scripts are commented and further details of the analyses are described here (REF). Each file in briefly described below.
+All scripts are commented and further details of the analyses are described here (REF). Each file is briefly described below.
 
 ## Getting started
 
