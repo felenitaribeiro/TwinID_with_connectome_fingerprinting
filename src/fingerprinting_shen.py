@@ -5,6 +5,7 @@ import seaborn as sns
 import networks_shen as ns
 import xlrd
 import functions as fun
+import pathlib
 
 # Monozygotic twins
 with open('./../data/Rest1/list_of_ID_MZ_R1R2') as fp:
@@ -177,7 +178,8 @@ matrices_network_r2 = {'network1': [], 'network2': [], 'network3': [],
 
 number_of_networks_shen = 8
 # Identification analysis for each functional network
-# plt.figure()
+pathlib.Path('./../outputs/corr_distributions').mkdir(parents=True, exist_ok=True)
+
 for j in range(1, number_of_networks_shen + 1):
     fun.network(eval('ns.network' + str(j)), shen_matrices_r1,
                 matrices_network_r1['network' + str(j)])
