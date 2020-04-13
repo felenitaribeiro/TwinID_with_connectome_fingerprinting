@@ -48,4 +48,6 @@ for j in range(len(parcellation)):
     plt.xlim(0, 1)
     plt.ylabel('Prediction accuracy (%)', fontsize=15)
     plt.xlabel("Effect size (Cliff's delta)", fontsize=15)
+    # plt.savefig('scatterplot_' + parcellation[j] + '.pdf')
+
     plt.show()

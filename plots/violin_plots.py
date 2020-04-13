@@ -49,6 +49,7 @@ for i in range(len(parcellation)):
         plt.yticks(fontsize=12)
         plt.ylabel('Correlation', fontsize=15)
 
+    # plt.savefig('corr_distributions_' + parcellation[i] + '.pdf')
     plt.show()
 
 
