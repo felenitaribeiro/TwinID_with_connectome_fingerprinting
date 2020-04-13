@@ -44,7 +44,8 @@ for j in range(len(parcellation)):
 
     results = {'SI_acc_mean': [], 'SI_acc_std': [],
                'MZ_acc_mean': [], 'MZ_acc_std': [],
-               'DZ_acc_mean': [], 'DZ_acc_std': []
+               'DZ_acc_mean': [], 'DZ_acc_std': [],
+               'Title': []
                }
 
     for i in range(nets[j]):
@@ -60,13 +61,14 @@ for j in range(len(parcellation)):
             np.mean(accuracies_twin.item()['n' + str(i) + '_DZ']))
         results['DZ_acc_std'].append(
             np.std(accuracies_twin.item()['n' + str(i) + '_DZ']))
+        results['Title'].append(eval('labels_dict_' + parcellation[j])['n' + str(i)][0])
 
     # Excel file
-    pd.DataFrame.from_dict(results).to_excel('./../outputs/identification_results_' + parcellation[j] + '.xlsx')
+    # pd.DataFrame.from_dict(results).to_excel('./../outputs/identification_results_' + parcellation[j] + '.xlsx')
+    df = pd.DataFrame(results)
+    df=df.sort_values(by=['SI_acc_mean'],ascending=False)
 
-    labels = []
-    for i in range(len(eval('labels_dict_' + parcellation[j]))):
-        labels.append(eval('labels_dict_' + parcellation[j])['n' + str(i)][0])
+    labels = df['Title']
 
     # Figure
     if nets[j] == 9:
@@ -77,20 +79,20 @@ for j in range(len(parcellation)):
     plt.ylabel('Identification accuracy', fontsize=20)
     bar_width = 0.25
     plt.xticks(range(nets[j]), labels, rotation=45, fontsize=15)
-    plt.bar(np.arange(nets[j]) - bar_width, results['SI_acc_mean'], bar_width, align='center',
-            yerr=results['SI_acc_std'], error_kw=dict(elinewidth=2, ecolor='k'), color='k',
+    plt.bar(np.arange(nets[j]) - bar_width, df['SI_acc_mean'], bar_width, align='center',
+            yerr=df['SI_acc_std'], error_kw=dict(elinewidth=2, ecolor='k'), color='k',
             label='Individual identification')
-    plt.bar(np.arange(nets[j]), results['MZ_acc_mean'], bar_width, align='center',
-            yerr=results['MZ_acc_std'],
+    plt.bar(np.arange(nets[j]), df['MZ_acc_mean'], bar_width, align='center',
+            yerr=df['MZ_acc_std'],
             error_kw=dict(elinewidth=2, ecolor='k'), color='dimgray',
             label='Monozygotic twin identification')
-    plt.bar(np.arange(nets[j]) + bar_width, results['DZ_acc_mean'], bar_width, align='center',
-            yerr=results['DZ_acc_std'], error_kw=dict(elinewidth=2, ecolor='k'),
+    plt.bar(np.arange(nets[j]) + bar_width, df['DZ_acc_mean'], bar_width, align='center',
+            yerr=df['DZ_acc_std'], error_kw=dict(elinewidth=2, ecolor='k'),
             color='darkgray', label='Dizygotic twin identification')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     plt.legend(fontsize=15)
     plt.tight_layout()
     plt.ylim(0, 100)
+    # plt.savefig('IDaccuracies_' + parcellation[j] + '.pdf')
     plt.show()
-
