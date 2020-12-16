@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 import seaborn as sns
-import networks_gordon as ns
+import functions.networks_gordon as ns
 import xlrd
 import functions as fun
 import pathlib

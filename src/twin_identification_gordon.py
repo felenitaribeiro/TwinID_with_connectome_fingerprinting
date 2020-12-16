@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.stats import pearsonr
-import twin_IDs as tid
-import networks_gordon as ng
-import functions as fun
+import functions.twin_IDs as tid
+import functions.networks_gordon as ng
+import functions.general_functions as fun
 
 # Monozygotic twins
 with open('./../data/Rest1/list_of_ID_MZ_R1R2') as fp:

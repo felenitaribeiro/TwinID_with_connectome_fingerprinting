@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import pearsonr
-import networks_shen as ns
-import networks_gordon as ng
+import functions.networks_shen as ns
+import functions.networks_gordon as ng
 
 parcellation = ['shen', 'gordon']
 nets = [9, 13]

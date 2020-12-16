@@ -16,6 +16,7 @@ labels_dict_shen = {'n0': ['All, 268', 'Whole-brain'],
                     'n6': ['VI, 18', 'Visual I'],
                     'n7': ['VII, 9', 'Visual II'],
                     'n8': ['VA, 18', 'Visual association']}
+nodes_shen = [268, 29, 34, 20, 90, 50, 18, 9, 18]
 
 labels_dict_gordon = {'n0': ['All, 333', 'Whole-brain'],
                       'n1': ['DAN, 41', 'Default mode'],
@@ -31,7 +32,13 @@ labels_dict_gordon = {'n0': ['All, 333', 'Whole-brain'],
                       'n11': ['S, 4', 'Salience'],
                       'n12': ['DAN, 32', 'Dorsal Attention'],
                       }
+nodes_gordon = [333, 41, 38, 8, 39, 24, 24, 5, 8, 40, 23, 4, 32]
 
+falconers_h2 = np.load('./../outputs/falconers_h2.npz')['dict']
+ACE_h2_shen = np.load('./../outputs/heritability_ACE_shen.npz')['list']
+# cholesky_common_h2_shen = np.load('./../outputs/heritability_shen_cholesky_common.npz')['list']
+# cholesky_edge_h2_shen = np.load('./../outputs/heritability_shen_cholesky_edge.npz')['list']
+ACE_h2_gordon = np.load('./../outputs/heritability_ACE_gordon.npz')['list']
 
 for j in range(len(parcellation)):
     accuracies_ind = \
@@ -45,7 +52,8 @@ for j in range(len(parcellation)):
     results = {'SI_acc_mean': [], 'SI_acc_std': [],
                'MZ_acc_mean': [], 'MZ_acc_std': [],
                'DZ_acc_mean': [], 'DZ_acc_std': [],
-               'Title': []
+               'Title': [], 'Falconers formula':[],
+               'ACE':[]
                }
 
     for i in range(nets[j]):
@@ -62,12 +70,24 @@ for j in range(len(parcellation)):
         results['DZ_acc_std'].append(
             np.std(accuracies_twin.item()['n' + str(i) + '_DZ']))
         results['Title'].append(eval('labels_dict_' + parcellation[j])['n' + str(i)][0])
+        results['Falconers formula'].append(
+            falconers_h2.item()[parcellation[j]][i])
+        results['ACE'].append(eval('ACE_h2_'+parcellation[j])[i])
+
 
     # Excel file
     # pd.DataFrame.from_dict(results).to_excel('./../outputs/identification_results_' + parcellation[j] + '.xlsx')
     df = pd.DataFrame(results)
     df=df.sort_values(by=['SI_acc_mean'],ascending=False)
 
+
+
+    print(stat.pearsonr(results['MZ_acc_mean'],
+                        eval('ACE_h2_'+parcellation[j])))
+    print(stat.pearsonr(results['MZ_acc_mean'],
+                        falconers_h2.item()[parcellation[j]]))
+    print(stat.pearsonr(falconers_h2.item()[parcellation[j]],
+                        eval('nodes_'+parcellation[j])))
     labels = df['Title']
 
     # Figure
