@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import functions.networks_shen as ns
 import xlrd
-import functions as fun
+import functions.general_functions as fun
 import pathlib
 
 # Monozygotic twins

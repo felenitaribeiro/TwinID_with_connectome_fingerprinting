@@ -23,283 +23,147 @@ for i in range(0, 380):
     with open('./../data/Rest2/list_of_ID_all_MZ_DZ_selected') as fp:
         lines = fp.read().split("\n")
 
-# shen_parcelation_MZ_twin
-accuracies_MZ=[]
-accuracies_DZ=[]
+# Individuals ID
+ID_individuals = lines[0:len(lines) - 1]
 
+# Twin ID
+twin_ID = tid.twin_pairs_ID
+
+# Connectomes
+finn_matrices_r1 = []
+finn_matrices_r2 = []
+
+
+# shen_parcelation_MZ_twin
+for i in range(0, 246):
+    # Rest1
+    rel_path_1 = './../data/Rest1/All_MZ_R1/' + lines[
+        i] + '/mat_conn_finn_r1.csv'
+    connectome_1 = np.reshape(np.loadtxt(rel_path_1, delimiter=','),(268,268))
+    connectome_1 = connectome_1[np.triu_indices(268,1)]
+    finn_matrices_r1.append(connectome_1)
+
+    # Rest2
+    rel_path_2 = './../data/Rest2/All_MZ_R2/' + lines[
+        i] + '/mat_conn_finn_r2.csv'
+    connectome_2 = np.reshape(np.loadtxt(rel_path_2, delimiter=','),(268,268))
+    connectome_2 = connectome_2[np.triu_indices(268,1)]
+    finn_matrices_r2.append(connectome_2)
+
+
+# shen_parcelation_DZ_twin
+for i in range(246, 380):
+    # Rest1
+    rel_path_1 = './../data/Rest1/All_DZ_R1/' + lines[
+        i] + '/mat_conn_finn_r1.csv'
+    connectome_1 = np.reshape(np.loadtxt(rel_path_1, delimiter=','),(268,268))
+    connectome_1 = connectome_1[np.triu_indices(268,1)]
+    finn_matrices_r1.append(connectome_1)
+
+    # Rest2
+    rel_path_2 = './../data/Rest2/All_DZ_R2/' + lines[
+        i] + '/mat_conn_finn_r2.csv'
+    connectome_2 = np.reshape(np.loadtxt(rel_path_2, delimiter=','),(268,268))
+    connectome_2 = connectome_2[np.triu_indices(268,1)]
+    finn_matrices_r2.append(connectome_2)
+
+
+
+
+iterations=100
 edges = [10,50,100,500,1000,5000,10000]
 
-for j in range(len(edges)):
+accuracies_MZ=np.zeros((iterations, len(edges)))
+accuracies_DZ=np.zeros((iterations, len(edges)))
+accuracies_ID=np.zeros((iterations, len(edges)))
 
-    # Computation for all individuals identification
-    corr_r1 = np.zeros(shape=(number_of_individuals, number_of_individuals))
-    corr_r2 = np.zeros(shape=(number_of_individuals, number_of_individuals))
-    corr_r1xr2 = np.zeros(shape=(number_of_individuals, number_of_individuals))
-    corr_r2xr1 = np.zeros(shape=(number_of_individuals, number_of_individuals))
+for k in range(iterations):
+    print(k)
+    for j in range(len(edges)):
 
-    # Defition of the list of connectivity matrices
-    finn_matrices_r1 = []
-    finn_matrices_r2 = []
+        # Computation for all individuals identification
+        corr_r1 = np.zeros(shape=(number_of_individuals, number_of_individuals))
+        corr_r2 = np.zeros(shape=(number_of_individuals, number_of_individuals))
+        corr_r1xr2 = np.zeros(shape=(number_of_individuals, number_of_individuals))
+        corr_r2xr1 = np.zeros(shape=(number_of_individuals, number_of_individuals))
+        ID_corr_r1xr2 = np.zeros(
+            shape=(number_of_individuals, number_of_individuals))
+        ID_corr_r2xr1 = np.zeros(
+            shape=(number_of_individuals, number_of_individuals))
 
-    random_edges_index = random.sample(range(0,35778),edges[j])
-    print(j)
-    for i in range(0, 246):
-        # Rest1
-        rel_path_1 = './../data/Rest1/All_MZ_R1/' + lines[
-            i] + '/mat_conn_finn_r1.csv'
-        connectome_1 = np.reshape(np.loadtxt(rel_path_1, delimiter=','),(268,268))
-        connectome_1 = connectome_1[np.triu_indices(268,1)]
-        finn_matrices_r1.append(connectome_1[random_edges_index])
+        # Defition of the list of connectivity matrices
 
-        # Rest2
-        rel_path_2 = './../data/Rest2/All_MZ_R2/' + lines[
-            i] + '/mat_conn_finn_r2.csv'
-        connectome_2 = np.reshape(np.loadtxt(rel_path_2, delimiter=','),(268,268))
-        connectome_2 = connectome_2[np.triu_indices(268,1)]
-        finn_matrices_r2.append(connectome_2[random_edges_index])
+        random_edges_index = random.sample(range(0, 35778), edges[j])
 
-    print(j)
-    # shen_parcelation_DZ_twin
-    for i in range(246, 380):
-        # Rest1
-        rel_path_1 = './../data/Rest1/All_DZ_R1/' + lines[
-            i] + '/mat_conn_finn_r1.csv'
-        connectome_1 = np.reshape(np.loadtxt(rel_path_1, delimiter=','),(268,268))
-        connectome_1 = connectome_1[np.triu_indices(268,1)]
-        finn_matrices_r1.append(connectome_1[random_edges_index])
+        matrices_r1 = np.array(finn_matrices_r1).T[random_edges_index].T
+        matrices_r2 = np.array(finn_matrices_r2).T[random_edges_index].T
 
-        # Rest2
-        rel_path_2 = './../data/Rest2/All_DZ_R2/' + lines[
-            i] + '/mat_conn_finn_r2.csv'
-        connectome_2 = np.reshape(np.loadtxt(rel_path_2, delimiter=','),(268,268))
-        connectome_2 = connectome_2[np.triu_indices(268,1)]
-        finn_matrices_r2.append(connectome_2[random_edges_index])
-    # Individuals ID
-    ID_individuals = lines[0:len(lines) - 1]
 
-    # Twin ID
-    twin_ID = tid.twin_pairs_ID
+        # Twin identification by ROIsxROIs matrices
+        # comparisons
+        # Correlation matrix among the subjects
+        # Rest1xRest1
+        fun.corr(matrices_r1, corr_r1)
 
-    print(np.shape(finn_matrices_r1))
+        # Rest2xRest2
+        fun.corr(matrices_r2, corr_r2)
 
-    # Twin identification by ROIsxROIs matrices
-    # comparisons
-    # Correlation matrix among the subjects
-    # Rest1xRest1
-    fun.corr(finn_matrices_r1, corr_r1)
+        # Rest1xRest2
+        for i in range(0, len(corr_r1)):
+            corr_row = []
+            for m in range(0, len(corr_r1)):
+                corr_row.append(
+                    pearsonr(matrices_r1[i].reshape(-1),
+                             matrices_r2[m].reshape(-1))[0])
+            corr_r1xr2[i] = corr_row
+            ID_corr_r1xr2[i] = corr_row
+        np.fill_diagonal(corr_r1xr2, -1)
 
-    # Rest2xRest2
-    fun.corr(finn_matrices_r2, corr_r2)
+        # Rest2xRest1
+        for i in range(0, len(corr_r1)):
+            corr_row = []
+            for m in range(0, len(corr_r1)):
+                corr_row.append(
+                    pearsonr(matrices_r2[i].reshape(-1),
+                             matrices_r1[m].reshape(-1))[0])
+            corr_r2xr1[i] = corr_row
+            ID_corr_r2xr1[i] = corr_row
+        np.fill_diagonal(corr_r2xr1, -1)
 
-    # Rest1xRest2
-    for i in range(0, len(corr_r1)):
-        corr_row = []
-        for m in range(0, len(corr_r1)):
-            corr_row.append(
-                pearsonr(finn_matrices_r1[i].reshape(-1),
-                         finn_matrices_r2[m].reshape(-1))[0])
-        corr_r1xr2[i] = corr_row
-    np.fill_diagonal(corr_r1xr2, -1)
+        corr_matrices = [corr_r1, corr_r2, corr_r1xr2, corr_r2xr1]
 
-    # Rest2xRest1
-    for i in range(0, len(corr_r1)):
-        corr_row = []
-        for m in range(0, len(corr_r1)):
-            corr_row.append(
-                pearsonr(finn_matrices_r2[i].reshape(-1),
-                         finn_matrices_r1[m].reshape(-1))[0])
-        corr_r2xr1[i] = corr_row
-    np.fill_diagonal(corr_r2xr1, -1)
+        # Individual ID
+        corr_matrices_ID = {
+            'n0_SI': [ID_corr_r1xr2, ID_corr_r2xr1]}
+        identification_accuracy = fun.accuracy(corr_matrices_ID['n0_SI'],
+                                               ID_individuals,
+                                               ID_individuals)
 
-    corr_matrices = [corr_r1, corr_r2, corr_r1xr2, corr_r2xr1]
+        accuracies_ID[k, j] = np.mean(identification_accuracy)
 
-    # Monozygotic twin identifications
-    MZ_id_accuracies = []
-    # for i in range(0, len(corr_matrices_whole_MZ)):
-    for i in range(0, len(corr_matrices)):
-        MZ_id_accuracies.append(fun.accuracy_t_MZ(
-            corr_matrices[i][:246], ID_individuals,
-            tid.twin_pairs_ID[:246]))
 
-    # Dizygotic twins identifications
-    DZ_id_accuracies = []
-    for i in range(0, len(corr_matrices)):
-        DZ_id_accuracies.append(
-            fun.accuracy_t_DZ(corr_matrices[i][246:], ID_individuals,
-                              tid.twin_pairs_ID[246:]))
+        # Monozygotic twin identifications
+        MZ_id_accuracies = []
+        # for i in range(0, len(corr_matrices_whole_MZ)):
+        for i in range(0, len(corr_matrices)):
+            MZ_id_accuracies.append(fun.accuracy_t_MZ(
+                corr_matrices[i][:246], ID_individuals,
+                tid.twin_pairs_ID[:246]))
 
-    accuracies_MZ.append(np.mean(MZ_id_accuracies))
-    accuracies_DZ.append(np.mean(DZ_id_accuracies))
+        # Dizygotic twins identifications
+        DZ_id_accuracies = []
+        for i in range(0, len(corr_matrices)):
+            DZ_id_accuracies.append(
+                fun.accuracy_t_DZ(corr_matrices[i][246:], ID_individuals,
+                                  tid.twin_pairs_ID[246:]))
 
-print(accuracies_MZ)
-print(accuracies_DZ)
+        accuracies_MZ[k, j] = np.mean(MZ_id_accuracies)
+        accuracies_DZ[k, j] = np.mean(DZ_id_accuracies)
 
-np.savez('accurecies_MZ_slices.npz',list = accuracies_MZ)
-np.savez('accurecies_DZ_slices.npz',list = accuracies_DZ)
+    print(accuracies_ID[k])
+    print(accuracies_MZ[k])
+    print(accuracies_DZ[k])
 
-# # Permutation - randon twin_pair_ID
-# accuracy_random_MZ = []
-# accuracy_random_DZ = []
-# for j in range(0, 1000):
-#     accuracies_MZ = []
-#     accuracies_DZ = []
-#     for i in range(0, len(corr_matrices)):
-#         accuracies_MZ.append(fun.accuracy_t_MZ(
-#             corr_matrices[i][:246], ID_individuals,
-#             np.ndarray.tolist(
-#                 np.random.permutation(tid.twin_pairs_ID[:246]))))
-#     accuracy_random_MZ.append(np.mean(accuracies_MZ))
-#
-#     for i in range(0, len(corr_matrices)):
-#         accuracies_DZ.append(fun.accuracy_t_DZ(
-#             corr_matrices[i][246:], ID_individuals,
-#             np.ndarray.tolist(
-#                 np.random.permutation(tid.twin_pairs_ID[246:]))))
-#     accuracy_random_DZ.append(np.mean(accuracies_DZ))
-#
-# # Twins identification for individual nets
-# matrices_network_r1 = {'network1': [], 'network2': [], 'network3': [],
-#                        'network4': [],
-#                        'network5': [], 'network6': [], 'network7': [],
-#                        'network8': []}
-# matrices_network_r2 = {'network1': [], 'network2': [], 'network3': [],
-#                        'network4': [],
-#                        'network5': [], 'network6': [], 'network7': [],
-#                        'network8': []}
-#
-# corr_network = {}
-#
-# # Combine rest1xrest1 and rest2xrest1
-# corr_matrices_n1 = []
-# corr_matrices_n2 = []
-# corr_matrices_n3 = []
-# corr_matrices_n4 = []
-# corr_matrices_n5 = []
-# corr_matrices_n6 = []
-# corr_matrices_n7 = []
-# corr_matrices_n8 = []
-#
-# # accuracy
-# accuracies = {'n1_MZ': [], 'n1_DZ': [], 'n2_MZ': [], 'n2_DZ': [],
-#               'n3_MZ': [], 'n3_DZ': [], 'n4_MZ': [], 'n4_DZ': [],
-#               'n5_MZ': [], 'n5_DZ': [], 'n6_MZ': [], 'n6_DZ': [],
-#               'n7_MZ': [], 'n7_DZ': [], 'n8_MZ': [], 'n8_DZ': []}
-#
-# accuracies_random = {'n1_MZ': [], 'n1_DZ': [], 'n2_MZ': [], 'n2_DZ': [],
-#                      'n3_MZ': [], 'n3_DZ': [], 'n4_MZ': [], 'n4_DZ': [],
-#                      'n5_MZ': [], 'n5_DZ': [], 'n6_MZ': [], 'n6_DZ': [],
-#                      'n7_MZ': [], 'n7_DZ': [], 'n8_MZ': [], 'n8_DZ': []}
-#
-# number_of_networks_finn = 8
-# for j in range(1, number_of_networks_finn + 1):
-#     fun.network(eval('nf.network' + str(j)), finn_matrices_r1,
-#                 matrices_network_r1['network' + str(j)])
-#     fun.network(eval('nf.network' + str(j)), finn_matrices_r2,
-#                 matrices_network_r2['network' + str(j)])
-#
-#     # Correlation matrix among the subjects
-#     corr_network['n' + str(j) + '_r1xr1'] = np.zeros(
-#         shape=(number_of_individuals,
-#                number_of_individuals))
-#     corr_network['n' + str(j) + '_r2xr2'] = np.zeros(
-#         shape=(number_of_individuals,
-#                number_of_individuals))
-#     corr_network['n' + str(j) + '_r1xr2'] = np.zeros(
-#         shape=(number_of_individuals,
-#                number_of_individuals))
-#     corr_network['n' + str(j) + '_r2xr1'] = np.zeros(
-#         shape=(number_of_individuals,
-#                number_of_individuals))
-#     # Rest1xRest1
-#     fun.corr(matrices_network_r1['network' + str(j)],
-#              corr_network['n' + str(j) + '_r1xr1'])
-#     # Rest2xRest2
-#     fun.corr(matrices_network_r2['network' + str(j)],
-#              corr_network['n' + str(j) + '_r2xr2'])
-#
-#     # Rest1xRest2
-#     for i in range(0, len(corr_network['n' + str(j) + '_r1xr1'])):
-#         corr_row = []
-#         for m in range(0, len(corr_network['n' + str(j) + '_r1xr1'])):
-#             corr_row.append(pearsonr(
-#                 matrices_network_r1['network' + str(j)][i].reshape(-1),
-#                 matrices_network_r2['network' + str(j)][m].reshape(-1))[0])
-#         corr_network['n' + str(
-#             j) + '_r1xr2'][i] = corr_row
-#     np.fill_diagonal(corr_network['n' + str(j) + '_r1xr2'], -1)
-#
-#     # Rest2xRest1
-#     for i in range(0, len(corr_network['n' + str(j) + '_r1xr1'])):
-#         corr_row = []
-#         for m in range(0, len(corr_network['n' + str(j) + '_r1xr1'])):
-#             corr_row.append(pearsonr(
-#                 matrices_network_r2['network' + str(j)][i].reshape(-1),
-#                 matrices_network_r1['network' + str(j)][m].reshape(-1))[0])
-#         corr_network['n' + str(j) + '_r2xr1'][i] = corr_row
-#     np.fill_diagonal(corr_network['n' + str(j) + '_r2xr1'], -1)
-#
-#     eval('corr_matrices_n' + str(j)).append(
-#         corr_network['n' + str(j) + '_r1xr1'])
-#     eval('corr_matrices_n' + str(j)).append(
-#         corr_network['n' + str(j) + '_r2xr2'])
-#     eval('corr_matrices_n' + str(j)).append(
-#         corr_network['n' + str(j) + '_r1xr2'])
-#     eval('corr_matrices_n' + str(j)).append(
-#         corr_network['n' + str(j) + '_r2xr1'])
-#
-#     # Identification analyses
-#     # Monozygotic
-#     print('MZ identification accuracies for network' + str(j))
-#     for i in range(0, len(eval('corr_matrices_n' + str(j)))):
-#         accuracies['n' + str(j) + '_MZ'].append(
-#             fun.accuracy_t_MZ(eval('corr_matrices_n' + str(j))[i][0:246, :],
-#                               ID_individuals, tid.twin_pairs_ID))
-#     print(accuracies['n' + str(j) + '_MZ'])
-#     # print np.mean(accuracies['n' + str(j) + '_MZ'])
-#     # print np.std(accuracies['n' + str(j) + '_MZ'])
-#
-#     # Dizygotic
-#     print('DZ identification accuracies for network' + str(j))
-#     for i in range(0, len(eval('corr_matrices_n' + str(j)))):
-#         accuracies['n' + str(j) + '_DZ'].append(
-#             fun.accuracy_t_DZ(eval('corr_matrices_n' + str(j))[i][246:, :],
-#                               ID_individuals, tid.twin_pairs_ID[246:]))
-#     print(accuracies['n' + str(j) + '_DZ'])
-#     # print np.mean(accuracies['n' + str(j) + '_DZ'])
-#     # print np.std(accuracies['n' + str(j) + '_DZ'])
-#
-#     # Permutation - random twin_pair_ID
-#     for k in range(0, 1000):
-#         accuracies_MZ = []
-#         accuracies_DZ = []
-#         for i in range(0, len(eval('corr_matrices_n' + str(j)))):
-#             accuracies_MZ.append(
-#                 fun.accuracy_t_MZ(
-#                     eval('corr_matrices_n' + str(j))[i][0:246, :],
-#                     ID_individuals, np.ndarray.tolist(
-#                         np.random.permutation(tid.twin_pairs_ID[:246]))))
-#         accuracies_random['n' + str(j) + '_MZ'].append(np.mean(accuracies_MZ))
-#
-#         for i in range(0, len(eval('corr_matrices_n' + str(j)))):
-#             accuracies_DZ.append(
-#                 fun.accuracy_t_DZ(eval('corr_matrices_n' + str(j))[i][246:, :],
-#                                   ID_individuals, np.ndarray.tolist(
-#                         np.random.permutation(tid.twin_pairs_ID[246:]))))
-#         accuracies_random['n' + str(j) + '_DZ'].append(np.mean(accuracies_DZ))
-#
-# accuracies['n0_MZ'] = MZ_id_accuracies
-# accuracies['n0_DZ'] = DZ_id_accuracies
-# accuracies_random['n0_MZ'] = accuracy_random_MZ
-# accuracies_random['n0_DZ'] = accuracy_random_DZ
-#
-# for j in range(9):
-#     print('Network' + str(j) + '=' + str(np.sum(
-#         accuracies_random['n' + str(j) + '_MZ'] > np.mean(
-#             accuracies['n' + str(j) + '_MZ']))))
-#     print('Network' + str(j) + '=' + str(np.sum(
-#         accuracies_random['n' + str(j) + '_DZ'] > np.mean(
-#             accuracies['n' + str(j) + '_DZ']))))
-#
-# # Saving final results
-# np.savez('./../outputs/accuracies_twin_id_shen', dict=accuracies)
-# np.savez('./../outputs/accuracies_perm_twin_id_shen', dict=accuracies_random)
+# np.savez('./../outputs/accuracies_SI_slices.npz',list = accuracies_ID)
+# np.savez('./../outputs/accuracies_MZ_slices.npz',list = accuracies_MZ)
+# np.savez('./../outputs/accuracies_DZ_slices.npz',list = accuracies_DZ)
