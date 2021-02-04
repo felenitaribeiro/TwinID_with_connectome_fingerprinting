@@ -1,21 +1,39 @@
-# TO DO - Connectome fingerprint analyses
+# Twin identification with connectome fingerprinting
 
-Repository with Python source code for the connectome fingerprinting analyses of ""
-## Getting started
-
-Scripts are briefly described below and if you have any question, feel free to contact me! 
-### Prerequisites 
-
-### Installing
-
-### License
+This repository contains all source code necessary to replicate our recent work entitled "Inferring the heritability of 
+large-scale functional networks with a multivariate ACE modeling approach" available on [bioRxiv](https://www.biorxiv.org/content/10.1101/437335v2.full).
 
 
-## Main references
-Finn, E. S. et al. Functional connectome fingerprinting: identifying individuals using patterns of brain connectivity. Nat. Neurosci. 18, 1664–1671 (2015).
+## General information
 
-Gordon, E. M. et al. Generation and Evaluation of a Cortical Area Parcellation from Resting-State Correlations. Cereb. Cortex 26, 288–303 (2014).
+Connectome fingerprint script are all available at ./src and figures were generated with scripts at ./plots. 
+## Requirements
 
-My own paper, which will be available soon.
+All packages necessary to replicate the analyses are listed at requirements.txt.
 
-Shen, X., Tokoglu, F., Papademetris, X. & Constable, R. T. Groupwise whole-brain parcellation from resting-state fMRI data for network node identification. Neuroimage 82, 403–415 (2013).
+## Citation
+
+Please cite our paper if you use our model (available at https://github.com/frcsantos/heritability) or if it was somewhat 
+useful for you.
+    
+    @article{Ribeiro2021,
+        title = {{Inferring the heritability of large-scale functional networks with a multivariate ACE modeling approach}},
+        author = {Ribeiro, Fernanda L and dos Santos, Felipe R C and Sato, Joao R and Pinaya, Walter H L and Biazoli, Claudinei E},
+        doi = {10.1101/437335},
+        journal = {bioRxiv},
+        url = {https://www.biorxiv.org/content/early/2020/09/16/437335},
+        year = {2020}
+    }
+
+
+
+## Contact
+Fernanda L. Ribeiro <[fernanda.ribeiro@uq.edu.au](fernanda.ribeiro@uq.edu.au)>
+
+
+## License
+
+MIT License
+
+Copyright (c) 2021 Fernanda Lenita Ribeiro
+

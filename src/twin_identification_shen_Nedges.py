@@ -2,7 +2,6 @@ import numpy as np
 from scipy.stats import pearsonr
 import functions.twin_IDs as tid
 import random
-import functions.networks_shen as nf
 import functions.general_functions as fun
 
 # Monozygotic twins
