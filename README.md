@@ -6,10 +6,12 @@ large-scale functional networks with a multivariate ACE modeling approach" avail
 
 ## General information
 
-Connectome fingerprint script are all available at ./src and figures were generated with scripts at ./plots. 
+Connectome fingerprinting scripts are all available at ./src and figures were generated with scripts located at ./plots. 
+
 ## Requirements
 
 All packages necessary to replicate the analyses are listed at requirements.txt.
+Cliff's delta was calculated using the following repository: https://github.com/neilernst/cliffsDelta
 
 ## Citation
 
