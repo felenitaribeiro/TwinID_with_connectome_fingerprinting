@@ -84,10 +84,10 @@ for j in range(len(parcellation)):
 
     print(stat.pearsonr(results['MZ_acc_mean'],
                         eval('ACE_h2_'+parcellation[j])))
-    print(stat.pearsonr(results['MZ_acc_mean'],
-                        falconers_h2.item()[parcellation[j]]))
-    print(stat.pearsonr(falconers_h2.item()[parcellation[j]],
-                        eval('nodes_'+parcellation[j])))
+    # print(stat.pearsonr(results['MZ_acc_mean'],
+    #                     falconers_h2.item()[parcellation[j]]))
+    # print(stat.pearsonr(falconers_h2.item()[parcellation[j]],
+    #                     eval('nodes_'+parcellation[j])))
     labels = df['Title']
 
     # Figure
